@@ -1,14 +1,12 @@
-# Decentralized Crowdfunding Platform (Foundry & Ethers.js)
+# Decentralized Crowdfunding Smart Contract (Foundry)
 
 ## Overview
-This repository contains a full-stack Web3 crowdfunding application built to demonstrate advanced smart contract architecture, multi-chain deployment strategies, and frontend wallet integration. The project enforces a minimum USD funding threshold by programmatically interacting with decentralized oracle networks.
+This repository contains a Web3 crowdfunding smart contract architecture built to demonstrate advanced EVM mechanics and multi-chain deployment strategies. The project enforces a minimum USD funding threshold by programmatically interacting with decentralized oracle networks.
 
 ## Technical Stack
 * **Smart Contracts:** Solidity (^0.8.34)
 * **Development & Testing Framework:** Foundry (Forge, Anvil, Cast)
 * **Decentralized Oracles:** Chainlink Data Feeds
-* **Frontend:** HTML, Vanilla JavaScript, Ethers.js (v6)
-* **Wallet Integration:** MetaMask (`window.ethereum`)
 
 ## Core Architecture & Features
 
@@ -27,10 +25,6 @@ This repository contains a full-stack Web3 crowdfunding application built to dem
 ### 4. Gas Optimization
 * **Storage Efficiency:** Uses `constant` and `immutable` keywords for state variables to drastically reduce deployment and execution costs.
 * **Custom Errors:** Replaces standard `require` strings with custom error types (e.g., `FundMe__NotOwner()`) to minimize bytecode size and save user gas.
-
-### 5. Frontend UI Integration
-* **Browser Provider:** Uses `ethers.BrowserProvider` to detect injected Web3 wallets (MetaMask) via `window.ethereum`.
-* **State Execution:** Allows users to connect their wallet, view the current contract balance, fund the contract, and trigger the owner-only withdrawal function directly from the browser.
 
 ## Quick Start
 *The following instructions are for developers looking to clone and run this project locally.*
@@ -52,12 +46,12 @@ forge build
 forge test
 ```
 
-**4. Test UI Locally**
-Spin up a local Anvil node, deploy the contract using the included Forge scripts, and open `index.html` via a local live server to interact with the frontend.
+**4. Local Deployment (Anvil)**
+Spin up a local Anvil node and deploy the contract using the included Forge scripts.
 ```bash
 anvil
 forge script script/DeployFundMe.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
 ## Security & Access Control
-* **Owner Modifiers:** Strict access control ensures only the deployer address can trigger the `withdraw()` function, resetting the funder mappings and safely transferring the balance.
+* **Owner Modifiers:** Strict access control ensures only the deployer address can trigger the `withdraw()` function, resetting the funder mappings and safely transferring the balance.dress can trigger the `withdraw()` function, resetting the funder mappings and safely transferring the balance.
