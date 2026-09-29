@@ -4,14 +4,24 @@ pragma solidity ^0.8.34;
 
 import {Test, console} from "forge-std/Test.sol";
 
+import {FundMe} from "../src/FundMe.sol";
+
 contract FundMeTest is Test {
-    uint256 number = 1;
+    FundMe fundMe;
 
     function setUp() external {
-        number = 2;
+        fundMe = new FundMe();
     }
 
-    function testDemo() public {
-        assertEq(number, 2);
+    function testMinimumDollarsIsFive() public view {
+        assertEq(fundMe.MINIMUM_USD(), 5e18);
+    }
+
+    function testOwnerIsMsgSender() public view {
+        assertEq(fundMe.i_owner(), address(this));
+    }
+
+    function testPriceFeedVersionIsAccurate() public view {
+        assertEq(fundMe.getVersion(), 4);
     }
 }
