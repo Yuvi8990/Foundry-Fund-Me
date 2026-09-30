@@ -21,7 +21,7 @@ contract FundMeTest is Test {
         assertEq(fundMe.i_owner(), address(this));
     }
 
-    //function testPriceFeedVersionIsAccurate() public view {
-    // assertEq(fundMe.getVersion(), 4);
-    // }
+    function testPriceFeedVersionIsAccurate() public view {
+        assertEq(fundMe.getVersion(), 4);
+    }
 }
