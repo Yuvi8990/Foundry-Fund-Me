@@ -34,5 +34,3 @@ contract FundMeTest is Test {
         }
     }
 }
-
-// deployFundMe here is a solidity contract not a script.
