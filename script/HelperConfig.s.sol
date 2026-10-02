@@ -9,7 +9,9 @@ pragma solidity ^0.8.34;
 
 import {Script} from "forge-std/Script.sol";
 
-contract HelperConfig {
+import {MockV3Aggregator} from "../test/mocks/MockV3Aggregator.sol";
+
+contract HelperConfig is Script {
     NetworkConfig public activeNetworkConfig;
 
     struct NetworkConfig {
@@ -36,7 +38,13 @@ contract HelperConfig {
         return mainNetEthConfig;
     }
 
-    function getAnvilEthConfig() public pure returns (NetworkConfig memory) {}
+    function getAnvilEthConfig() public returns (NetworkConfig memory) {
+        vm.startBroadcast();
+        MockV3Aggregator mockAnvilPriceFeed = new MockV3Aggregator(8, 2000e8);
+        vm.stopBroadcast();
+        NetworkConfig memory anvilEthConfig = NetworkConfig({priceFeed: address(mockAnvilPriceFeed)});
+        return anvilEthConfig;
+    }
 }
 
 // these functions will return configs by taking in the data required to do so as inputs, which is just the address of the respective price feed
