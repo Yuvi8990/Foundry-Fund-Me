@@ -48,5 +48,3 @@ contract HelperConfig is Script {
 }
 
 // these functions will return configs by taking in the data required to do so as inputs, which is just the address of the respective price feed
-
-// for now we need one,but what if we need a ton stuff in here like vrf address, gas price and others later. so its best to create custom data types for this which can be updated later.
