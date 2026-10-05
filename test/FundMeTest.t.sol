@@ -33,4 +33,13 @@ contract FundMeTest is Test {
             assertEq(version, 6);
         }
     }
+
+    function testFundingFailsWithoutEnoughETH() public {
+        vm.expectRevert(); //hey the next line should revert or assert that the text in next line fails
+        fundMe.fund(); //this means fundMe.fund{value: 0}(), same thing as that syntax,i.e this is how we send value. so it will as we send 0 value which is lower than min usd, i.e the test will pass.
+    }
+
+    function testFundingUpdatesFundedDataStructure() public {
+        fundMe.fund{value: 10e18}();
+    }
 }
