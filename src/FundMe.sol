@@ -6,6 +6,8 @@ import {PriceConverter} from "./PriceConvertor.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 error FundMe_NotOwner();
+error Didnot_send_enoughETH();
+error Call_failed();
 
 contract FundMe {
     using PriceConverter for uint256;
@@ -23,7 +25,7 @@ contract FundMe {
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, "You need to spend more ETH!");
+        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, Didnot_send_enoughETH());
         addressToAmountFunded[msg.sender] += msg.value;
         funders.push(msg.sender);
     }
@@ -41,7 +43,7 @@ contract FundMe {
         funders = new address[](0);
 
         (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
-        require(callSuccess, "Call failed");
+        require(callSuccess, Call_failed());
     }
 
     fallback() external payable {
