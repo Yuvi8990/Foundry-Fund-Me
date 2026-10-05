@@ -27,7 +27,7 @@ contract HelperConfig is Script {
         } else if (block.chainid == 1) {
             activeNetworkConfig = getMainnetEthConfig();
         } else {
-            activeNetworkConfig = getAnvilEthConfig();
+            activeNetworkConfig = getOrCreateAnvilEthConfig();
         }
     }
 
@@ -41,7 +41,11 @@ contract HelperConfig is Script {
         return mainNetEthConfig;
     }
 
-    function getAnvilEthConfig() public returns (NetworkConfig memory) {
+    function getOrCreateAnvilEthConfig() public returns (NetworkConfig memory) {
+        if (activeNetworkConfig.priceFeed != address(0)) {
+            return activeNetworkConfig;
+        }
+
         vm.startBroadcast();
         MockV3Aggregator mockAnvilPriceFeed = new MockV3Aggregator(DECIMALS, INITIAL_PRICE);
         vm.stopBroadcast();
@@ -51,3 +55,4 @@ contract HelperConfig is Script {
 }
 
 // these functions will return configs by taking in the data required to do so as inputs, which is just the address of the respective price feed
+// 0 is the value address defaults to
