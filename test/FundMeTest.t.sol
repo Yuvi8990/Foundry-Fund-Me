@@ -51,4 +51,15 @@ contract FundMeTest is Test {
         uint256 amountFunded = fundMe.getAddressToAmountFunded(USER);
         assertEq(amountFunded, SEND_VALUE);
     }
+
+    function testAddsFunderToArrayOfFunders() public {
+        vm.prank(USER);
+        fundMe.fund{value: SEND_VALUE}();
+
+        address funder = fundMe.getFunder(0);
+        assertEq(funder, USER);
+    }
 }
+
+// v.I => everytime we call a function or even call them together, first setup runs and a test is executed, then setup runs again and a test is executed again.
+// so after one test setup runs again and RESETS evrything including address and stuff for every test.
