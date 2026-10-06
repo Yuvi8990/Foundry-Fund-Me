@@ -11,9 +11,14 @@ import {DeployFundMe} from "../script/DeployFundMe.s.sol";
 contract FundMeTest is Test {
     FundMe fundMe;
 
+    address USER = makeAddr("user"); // here makeAddr is also cheatcode from another family living in forge std. it takes a string input from us,here user, and then converts that into an address; which we can store in another variable,here USER.
+    uint256 constant SEND_VALUE = 0.1 ether; //decimals usually dont work in solidity, but saying ether makes it 0.1 * 1e18
+    uint256 constant STARTING_BALANCE = 10 ether;
+
     function setUp() external {
         DeployFundMe deployFundMe = new DeployFundMe();
         fundMe = deployFundMe.run();
+        vm.deal(USER, STARTING_BALANCE);
     }
 
     function testMinimumDollarsIsFive() public view {
@@ -40,6 +45,10 @@ contract FundMeTest is Test {
     }
 
     function testFundingUpdatesFundedDataStructure() public {
-        fundMe.fund{value: 10e18}();
+        vm.prank(USER); //the next line or text will be sent by USER.
+        fundMe.fund{value: SEND_VALUE}();
+
+        uint256 amountFunded = fundMe.getAddressToAmountFunded(USER);
+        assertEq(amountFunded, SEND_VALUE);
     }
 }
