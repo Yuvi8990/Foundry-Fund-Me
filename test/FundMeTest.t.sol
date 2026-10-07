@@ -93,7 +93,7 @@ contract FundMeTest is Test {
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
         for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
-            hoax(address(i), SEND_VALUE);
+            hoax(address(i), STARTING_BALANCE);
             fundMe.fund{value: SEND_VALUE}();
         }
 
