@@ -21,6 +21,7 @@ This repository contains a Web3 crowdfunding smart contract architecture built t
 ### 3. Advanced Test Suite (Forge)
 * **Mainnet Forking:** Validates external oracle calls by spinning up local forks of live networks using `forge test --fork-url`.
 * **State Manipulation:** Employs Foundry cheatcodes (`vm.prank`, `vm.deal`, `vm.expectRevert`) to simulate multi-user funding scenarios, ownership access controls, and failure states.
+* **Integration Testing:** Validates the complete end-to-end user flow (deploying, funding, and withdrawing) using automated `foundry-devops` scripts to ensure all contract components interact seamlessly.
 
 ### 4. Gas Optimization
 * **Storage Efficiency:** Uses `constant` and `immutable` keywords for state variables to drastically reduce deployment and execution costs.
@@ -35,7 +36,7 @@ This repository contains a Web3 crowdfunding smart contract architecture built t
   for (uint256 i = 0; i < length; i++) { ... }
 
 ## 🚀 Quick Start
-*The following instructions are for developers looking to clone and run this project locally.*
+The following instructions are for developers looking to clone and run this project locally.
 
 **1. Clone and Install Dependencies**
 ```bash
@@ -44,41 +45,57 @@ cd Foundry-Fund-Me
 forge install
 ```
 
-**2. Compile the Contracts**
+**2. Set Up Environment Variables**
+Create a `.env` file in the root directory and add your testnet or mainnet variables. (Not required for local Anvil testing, but needed for fork testing).
+```text
+SEPOLIA_RPC_URL=your_alchemy_or_infura_url
+```
+
+**3. Build the Project**
 ```bash
 forge build
 ```
 
-**3. Run the Test Suite**
+**4. Run Tests**
+Run the local unit tests (automatically deploys mock price feeds on chain ID `31337`):
 ```bash
 forge test
 ```
 
-**4. Local Deployment (Anvil)**
-Spin up a local Anvil node and deploy the contract using the included Forge scripts.
+Run fork tests against a live network (sets `block.chainid` to match the target network and reads live Chainlink feeds):
 ```bash
-anvil
-forge script script/DeployFundMe.s.sol --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast
+source .env
+forge test --fork-url $SEPOLIA_RPC_URL
 ```
+
 ### 💻 Interacting with the Contract
 
-Once deployed locally, you can use `cast` to interact with the contract.
+Instead of manually typing long `cast` commands, this project utilizes programmatic **interaction scripts** built with `foundry-devops` and automates the workflow using a `Makefile`. 
 
-**1. Fund the Contract**
-Send 0.1 ETH to the contract (ensure you replace the contract address with your deployed address):
+**1. Start a local Anvil node (in a separate terminal):**
 ```bash
-cast send <DEPLOYED_CONTRACT_ADDRESS> "fund()" --value 0.1ether --rpc-url http://localhost:8545 --private-key <YOUR_PRIVATE_KEY>
+make anvil
 ```
 
-**2. Check the Contract Balance**
+**2. Deploy the contract:**
 ```bash
-cast balance <DEPLOYED_CONTRACT_ADDRESS> --rpc-url http://localhost:8545
+make deploy
 ```
 
-**3. Withdraw Funds (Owner Only)**
+**3. Fund the contract:**
+Automatically targets the most recently deployed contract address and funds it:
 ```bash
-cast send <DEPLOYED_CONTRACT_ADDRESS> "withdraw()" --rpc-url http://localhost:8545 --private-key <YOUR_PRIVATE_KEY>
+make fund
 ```
+
+**4. Withdraw funds:**
+Executes the withdrawal script safely as the contract owner:
+```bash
+make withdraw
+```
+
+> **Note:** The `make fund` and `make withdraw` commands execute the `Interactions.s.sol` scripts under the hood, utilizing `DevOpsTools` to dynamically fetch the latest deployment address instead of requiring hardcoded addresses.
+
 ## 🛡️ Security & Access Control
 * **Owner Modifiers:** Strict access control ensures only the deployer address can trigger the `withdraw()` function, resetting the funder mappings and safely transferring the balance.
   
