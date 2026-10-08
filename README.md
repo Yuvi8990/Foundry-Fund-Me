@@ -25,6 +25,14 @@ This repository contains a Web3 crowdfunding smart contract architecture built t
 ### 4. Gas Optimization
 * **Storage Efficiency:** Uses `constant` and `immutable` keywords for state variables to drastically reduce deployment and execution costs.
 * **Custom Errors:** Replaces standard `require` strings with custom error types (e.g., `FundMe__NotOwner()`) to minimize bytecode size and save user gas.
+* **Memory vs. Storage Caching:** Optimizes the `withdraw` function by reading storage variables into memory before iterating. This avoids repeated and expensive `SLOAD` operations during `for` loops, saving significant gas (e.g., ~800 gas).
+  ```solidity
+  // Instead of this (expensive):
+  for (uint256 i = 0; i < funders.length; i++) { ... }
+
+  // We do this (gas efficient):
+  uint256 length = funders.length; 
+  for (uint256 i = 0; i < length; i++) { ... }
 
 ## 🚀 Quick Start
 *The following instructions are for developers looking to clone and run this project locally.*
