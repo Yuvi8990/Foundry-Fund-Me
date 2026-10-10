@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.34;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
 import {FundMe} from "../../src/FundMe.sol";
 
