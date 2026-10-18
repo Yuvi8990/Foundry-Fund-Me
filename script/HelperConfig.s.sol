@@ -1,10 +1,5 @@
 //SPDX-License-Identifier: MIT
 
-// it does two things, first it deploy mocks when we are on a local anvil chain.
-// second; it keep track of contract addresses across different chains
-// so it will help us work with a mock price or any eth based price feed with modularity without any problem.
-// if we are on local anvil we can deploy mocks, otherwise can grab the existing addresses from live network
-
 pragma solidity ^0.8.34;
 
 import {Script} from "forge-std/Script.sol";
@@ -54,5 +49,3 @@ contract HelperConfig is Script {
     }
 }
 
-// these functions will return configs by taking in the data required to do so as inputs, which is just the address of the respective price feed
-// 0 is the value address defaults to
