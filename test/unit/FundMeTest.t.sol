@@ -11,8 +11,8 @@ import {DeployFundMe} from "../../script/DeployFundMe.s.sol";
 contract FundMeTest is Test {
     FundMe fundMe;
 
-    address USER = makeAddr("user"); // here makeAddr is also cheatcode from another family living in forge std. it takes a string input from us,here user, and then converts that into an address; which we can store in another variable,here USER.
-    uint256 constant SEND_VALUE = 0.1 ether; //decimals usually dont work in solidity, but saying ether makes it 0.1 * 1e18
+    address USER = makeAddr("user");
+    uint256 constant SEND_VALUE = 0.1 ether;
     uint256 constant STARTING_BALANCE = 10 ether;
 
     function setUp() external {
@@ -40,12 +40,12 @@ contract FundMeTest is Test {
     }
 
     function testFundingFailsWithoutEnoughETH() public {
-        vm.expectRevert(); //hey the next line should revert or assert that the text in next line fails
-        fundMe.fund(); //this means fundMe.fund{value: 0}(), same thing as that syntax,i.e this is how we send value. so it will as we send 0 value which is lower than min usd, i.e the test will pass.
+        vm.expectRevert();
+        fundMe.fund();
     }
 
     function testFundingUpdatesFundedDataStructure() public {
-        vm.prank(USER); //the next line or text will be sent by USER.
+        vm.prank(USER);
         fundMe.fund{value: SEND_VALUE}();
 
         uint256 amountFunded = fundMe.getAddressToAmountFunded(USER);
@@ -133,7 +133,3 @@ contract FundMeTest is Test {
     }
 }
 
-// v.I => everytime we call a function or even call them together, first setup runs and a test is executed, then setup runs again and a test is executed again.
-// so after one test setup runs again and RESETS evrything including address and stuff for every test.
-// arrange(setting up data structures and stuff) => act(write what you want the test to do) => assert(assert check of test)
-// hoax does both prank and deal combined.
